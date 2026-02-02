@@ -36,10 +36,11 @@ A full‑stack AI‑powered portfolio website featuring a team of intelligent ag
 - **ORM**: SQLModel (Pydantic + SQLAlchemy)
 
 ### Frontend
-- **Framework**: Next.js 14 (React)
+- **Framework**: Next.js 15.5.11 (React)
 - **Styling**: Tailwind CSS
 - **Language**: TypeScript
 - **Markdown**: react-markdown with sanitization
+- **Security**: All critical vulnerabilities patched (upgraded from 14.2.5)
 
 ## Getting Started
 
