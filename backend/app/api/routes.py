@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Response, Request
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, Field
 from app.agents.welcome_agent import WelcomeAgent
 from app.agents.project_agent import ProjectAgent
 from app.agents.career_agent import CareerAgent
@@ -11,7 +11,7 @@ from fastapi.responses import StreamingResponse
 router = APIRouter()
 
 class Query(BaseModel):
-    query: constr(min_length=1, max_length=2000)
+    query: str = Field(..., min_length=1, max_length=2000)
 
 @router.post("/welcome")
 @limiter.limit("30/minute")

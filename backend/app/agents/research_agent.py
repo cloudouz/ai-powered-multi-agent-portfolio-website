@@ -31,9 +31,13 @@ class ResearchAgent(BaseAgent):
         if getattr(ai_msg, "tool_calls", None):
             for tc in ai_msg.tool_calls:
                 if tc["name"] == self.search_tool.name:
-                    args = tc.get("args", {}) or {}
-                    result = self.search_tool.invoke(args)
-                    messages.append(ToolMessage(content=json.dumps(result), tool_call_id=tc["id"]))
+                    try:
+                        args = tc.get("args", {}) or {}
+                        result = self.search_tool.invoke(args)
+                        messages.append(ToolMessage(content=json.dumps(result), tool_call_id=tc["id"]))
+                    except Exception as e:
+                        error_msg = f"Search tool failed: {str(e)}"
+                        messages.append(ToolMessage(content=error_msg, tool_call_id=tc["id"]))
             final_msg: AIMessage = self.llm.get_model().invoke(messages)
             content = final_msg.content if isinstance(final_msg, AIMessage) else str(final_msg)
         else:
