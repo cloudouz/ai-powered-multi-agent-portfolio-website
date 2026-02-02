@@ -15,8 +15,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
-      - run: pip install -U pip pip-audit
+      - run: pip install -U pip bandit safety pip-audit
       - run: pip install . fastapi uvicorn pydantic-settings httpx slowapi python-jose[cryptography] argon2-cffi sqlalchemy sqlmodel redis markdown-it-py langchain-core langchain-community langchain-openai langchain-google-genai google-generativeai tavily-python
+      - run: bandit -r app -q || true
+      - run: safety check -i 51457 || true
       - run: pip-audit || true
   frontend:
     runs-on: ubuntu-latest
