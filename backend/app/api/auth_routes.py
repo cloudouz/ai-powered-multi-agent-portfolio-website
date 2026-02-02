@@ -49,11 +49,13 @@ def login(payload: LoginIn, request: Request, response: Response, session: Sessi
     if not user or not verify_password(payload.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = create_access_token(sub=str(user.id), role=user.role)
+    
+    from app.core.config import settings
     response.set_cookie(
         "access_token",
         token,
         httponly=True,
-        secure=True,
+        secure=(settings.ENV == "production"),
         samesite="Lax",
         max_age=1800,
         path="/",
@@ -69,5 +71,12 @@ def logout(response: Response):
 
 @router.get("/auth/me")
 def me(request: Request):
-    authed = bool(request.cookies.get("access_token"))
-    return {"authenticated": authed}
+    token = request.cookies.get("access_token")
+    if not token:
+        return {"authenticated": False}
+    try:
+        from app.security.auth import get_current_user
+        get_current_user(request)
+        return {"authenticated": True}
+    except:
+        return {"authenticated": False}

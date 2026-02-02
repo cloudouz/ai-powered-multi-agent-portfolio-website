@@ -1,5 +1,6 @@
 import secrets
 from fastapi import Response, Request, HTTPException, status
+from app.core.config import settings
 
 CSRF_COOKIE_NAME = "csrf_token"
 
@@ -10,7 +11,7 @@ def set_csrf_cookie(resp: Response) -> str:
         CSRF_COOKIE_NAME,
         token,
         httponly=False,
-        secure=True,
+        secure=(settings.ENV == "production"),
         samesite="Lax",
         max_age=3600,
         path="/",

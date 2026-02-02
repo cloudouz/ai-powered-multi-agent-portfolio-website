@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 function getCookie(name: string) {
   if (typeof document === "undefined") return undefined;
   const v = document.cookie.split("; ").find(c => c.startsWith(name + "="));
-  return v?.split("=")[1];
+  return v ? decodeURIComponent(v.split("=")[1]) : undefined;
 }
 
 export default function Login() {
