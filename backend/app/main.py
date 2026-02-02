@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi.middleware import SlowAPIMiddleware
 from app.core.config import settings
 from app.api.routes import router
+from app.security.rate_limit import limiter
 
 app = FastAPI(title="AI Portfolio Agents", version="0.1.0")
+app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
 
 app.add_middleware(
