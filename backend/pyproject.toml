@@ -1,0 +1,27 @@
+[project]
+name = "ai-portfolio-agents"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "python-dotenv",
+  "pydantic-settings",
+  "httpx",
+  "slowapi",
+  "python-jose[cryptography]",
+  "argon2-cffi",
+  "sqlalchemy",
+  "sqlmodel",
+  "redis",
+  "markdown-it-py",
+  "langchain-core",
+  "langchain-community",
+  "langchain-openai",
+  "langchain-google-genai",
+  "google-generativeai",
+  "tavily-python"
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["app"]
