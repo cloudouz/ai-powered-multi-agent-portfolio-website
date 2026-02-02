@@ -2,12 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, Response, Request, status
 from pydantic import BaseModel, EmailStr, constr
 from sqlmodel import select
 from sqlmodel import Session
+from jose import jwt, JWTError
 from app.db import get_session
 from app.models.user import User
 from app.security.passwords import hash_password, verify_password
 from app.security.auth import create_access_token
 from app.security.rate_limit import limiter
 from app.security.csrf import set_csrf_cookie, verify_csrf
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -69,5 +71,12 @@ def logout(response: Response):
 
 @router.get("/auth/me")
 def me(request: Request):
-    authed = bool(request.cookies.get("access_token"))
-    return {"authenticated": authed}
+    token = request.cookies.get("access_token")
+    if not token:
+        return {"authenticated": False}
+    
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+        return {"authenticated": True, "user_id": payload.get("sub"), "role": payload.get("role")}
+    except JWTError:
+        return {"authenticated": False}
